@@ -1,0 +1,22 @@
+    [
+        {
+        "ParameterKey": "VPCName",
+        "ParameterValue": "vpc-0cab583c0d2eb2191" 
+    },
+    {
+        "ParameterKey": "TagValue",
+        "ParameterValue": "Production"
+    },
+    {
+        "ParameterKey": "StandaloneInstanceSecurityGroup",
+        "ParameterValue": "sg-02c1fc34e3e4daccf" 
+    },
+    {
+        "ParameterKey": "SubnetIdForStandaloneInstance",
+        "ParameterValue": "subnet-03f806b125c2bfbd9" 
+    },
+    {
+        "ParameterKey": "DeleteVolumeOnTermination",
+        "ParameterValue": "true" 
+    }
+    ]
