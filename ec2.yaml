@@ -470,7 +470,7 @@ Resources:
     Type: 'AWS::IAM::Role'
     Properties:
       Path: /
-      RoleName: "ec2-role"
+      RoleName: "ec2-role-2"
       AssumeRolePolicyDocument:
         Statement:
           - Action: "sts:AssumeRole"
