@@ -1,0 +1,490 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This is a Global Compute template with all the compute resources. This Template works for Windows, linux and ubuntu ami's 
+
+
+Metadata: 
+
+  AWS::CloudFormation::Interface:
+
+    ParameterGroups:
+
+    - Label:
+        default: Enter the Inputs for Stand Alone Instances 
+      Parameters:
+      - TagValue
+      - InstanceType
+      - MachineType
+      - ImageId
+      - KeyName
+      - SubnetIdForStandaloneInstance 
+      - StandAloneInstanceAvalilabilityZone
+      - StandaloneInstanceSecurityGroup
+      - VolumeSizeFortheDevice
+      - DeleteVolumeOnTermination
+      - VolumeEncryption
+
+
+
+Parameters:
+
+  VPCName:
+    Description: Select the VPC where the resources are to be provisioned.
+    Type: AWS::EC2::VPC::Id
+    Default: prod-vpc
+
+  TagValue:
+    Description: Select the Name of Environment.
+    Type: String
+    AllowedValues:
+    - Development
+    - Staging
+    - Production
+  
+  StandaloneName:
+    Description: Enter the Name of Standalone Ec2.
+    Type: String
+    Default: 'EC2'
+  
+
+  KeyName:
+    Description: Select the Key pair that is used to login into the instance.
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: darshan
+
+  ImageId:
+    Description: Enter the Image ID required for the Instances. 
+    Type: AWS::EC2::Image::Id
+    Default:  ami-0cca134ec43cf708f
+
+  MachineType:
+    Type: String
+    Description: Select the type of Operating system 'Ubuntu' or 'Amazon Linux 2 AMI'.
+    Default: 'amazon-linux-2'
+    AllowedValues:
+    - 'ubuntu'
+    - 'amazon-linux-2'
+ 
+  
+  InstanceType:
+    Description: Select the Instance type.
+    Type: String
+    AllowedValues:
+      - a1.2xlarge
+      - a1.4xlarge
+      - a1.large
+      - a1.medium
+      - a1.metal
+      - a1.xlarge
+      - c1.medium
+      - c1.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - c3.large
+      - c3.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - c4.large
+      - c4.xlarge
+      - c5.12xlarge
+      - c5.18xlarge
+      - c5.24xlarge
+      - c5.2xlarge
+      - c5.4xlarge
+      - c5.9xlarge
+      - c5.large
+      - c5.metal
+      - c5.xlarge
+      - c5a.12xlarge
+      - c5a.16xlarge
+      - c5a.24xlarge
+      - c5a.2xlarge
+      - c5a.4xlarge
+      - c6a.2xlarge
+      - c5a.8xlarge
+      - c5a.large
+      - c5a.xlarge
+      - c5d.12xlarge
+      - c5d.18xlarge
+      - c5d.24xlarge
+      - c5d.2xlarge
+      - c5d.4xlarge
+      - c5d.9xlarge
+      - c5d.large
+      - c5d.metal
+      - c5d.xlarge
+      - c5n.18xlarge
+      - c5n.2xlarge
+      - c5n.4xlarge
+      - c5n.9xlarge
+      - c5n.large
+      - c5n.xlarge
+      - c6g.12xlarge
+      - c6g.16xlarge
+      - c6g.2xlarge
+      - c6g.4xlarge
+      - c6g.8xlarge
+      - c6g.large
+      - c6g.medium
+      - c6g.metal
+      - c6g.xlarge
+      - cc1.4xlarge
+      - cc2.8xlarge
+      - cg1.4xlarge
+      - cr1.8xlarge
+      - d2.2xlarge
+      - d2.4xlarge
+      - d2.8xlarge
+      - d2.xlarge
+      - f1.16xlarge
+      - f1.2xlarge
+      - f1.4xlarge
+      - g2.2xlarge
+      - g2.8xlarge
+      - g3.16xlarge
+      - g3.4xlarge
+      - g3.8xlarge
+      - g3s.xlarge
+      - g4dn.12xlarge
+      - g4dn.16xlarge
+      - g4dn.2xlarge
+      - g4dn.4xlarge
+      - g4dn.8xlarge
+      - g4dn.metal
+      - g4dn.xlarge
+      - h1.16xlarge
+      - h1.2xlarge
+      - h1.4xlarge
+      - h1.8xlarge
+      - hi1.4xlarge
+      - hs1.8xlarge
+      - i2.2xlarge
+      - i2.4xlarge
+      - i2.8xlarge
+      - i2.xlarge
+      - i3.16xlarge
+      - i3.2xlarge
+      - i3.4xlarge
+      - i3.8xlarge
+      - i3.large
+      - i3.metal
+      - i3.xlarge
+      - i3en.12xlarge
+      - i3en.24xlarge
+      - i3en.2xlarge
+      - i3en.3xlarge
+      - i3en.6xlarge
+      - i3en.large
+      - i3en.metal
+      - i3en.xlarge
+      - inf1.24xlarge
+      - inf1.2xlarge
+      - inf1.6xlarge
+      - inf1.xlarge
+      - m1.large
+      - m1.medium
+      - m1.small
+      - m1.xlarge
+      - m2.2xlarge
+      - m2.4xlarge
+      - m2.xlarge
+      - m3.2xlarge
+      - m3.large
+      - m3.medium
+      - m3.xlarge
+      - m4.10xlarge
+      - m4.16xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.large
+      - m4.xlarge
+      - m5.12xlarge
+      - m5.16xlarge
+      - m5.24xlarge
+      - m5.2xlarge
+      - m5.4xlarge
+      - m5.8xlarge
+      - m5.large
+      - m5.metal
+      - m5.xlarge
+      - m5a.12xlarge
+      - m5a.16xlarge
+      - m5a.24xlarge
+      - m5a.2xlarge
+      - m5a.4xlarge
+      - m5a.8xlarge
+      - m5a.large
+      - m5a.xlarge
+      - m5ad.12xlarge
+      - m5ad.16xlarge
+      - m5ad.24xlarge
+      - m5ad.2xlarge
+      - m5ad.4xlarge
+      - m5ad.8xlarge
+      - m5ad.large
+      - m5ad.xlarge
+      - m5d.12xlarge
+      - m5d.16xlarge
+      - m5d.24xlarge
+      - m5d.2xlarge
+      - m5d.4xlarge
+      - m5d.8xlarge
+      - m5d.large
+      - m5d.metal
+      - m5d.xlarge
+      - m5dn.12xlarge
+      - m5dn.16xlarge
+      - m5dn.24xlarge
+      - m5dn.2xlarge
+      - m5dn.4xlarge
+      - m5dn.8xlarge
+      - m5dn.large
+      - m5dn.xlarge
+      - m5n.12xlarge
+      - m5n.16xlarge
+      - m5n.24xlarge
+      - m5n.2xlarge
+      - m5n.4xlarge
+      - m5n.8xlarge
+      - m5n.large
+      - m5n.xlarge
+      - m6g.12xlarge
+      - m6g.16xlarge
+      - m6g.2xlarge
+      - m6g.4xlarge
+      - m6g.8xlarge
+      - m6g.large
+      - m6g.medium
+      - m6g.metal
+      - m6g.xlarge
+      - p2.16xlarge
+      - p2.8xlarge
+      - p2.xlarge
+      - p3.16xlarge
+      - p3.2xlarge
+      - p3.8xlarge
+      - p3dn.24xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+      - r3.large
+      - r3.xlarge
+      - r4.16xlarge
+      - r4.2xlarge
+      - r4.4xlarge
+      - r4.8xlarge
+      - r4.large
+      - r4.xlarge
+      - r5.12xlarge
+      - r5.16xlarge
+      - r5.24xlarge
+      - r5.2xlarge
+      - r5.4xlarge
+      - r5.8xlarge
+      - r5.large
+      - r5.metal
+      - r5.xlarge
+      - r5a.12xlarge
+      - r5a.16xlarge
+      - r5a.24xlarge
+      - r5a.2xlarge
+      - r5a.4xlarge
+      - r5a.8xlarge
+      - r5a.large
+      - r5a.xlarge
+      - r5ad.12xlarge
+      - r5ad.16xlarge
+      - r5ad.24xlarge
+      - r5ad.2xlarge
+      - r5ad.4xlarge
+      - r5ad.8xlarge
+      - r5ad.large
+      - r5ad.xlarge
+      - r5d.12xlarge
+      - r5d.16xlarge
+      - r5d.24xlarge
+      - r5d.2xlarge
+      - r5d.4xlarge
+      - r5d.8xlarge
+      - r5d.large
+      - r5d.metal
+      - r5d.xlarge
+      - r5dn.12xlarge
+      - r5dn.16xlarge
+      - r5dn.24xlarge
+      - r5dn.2xlarge
+      - r5dn.4xlarge
+      - r5dn.8xlarge
+      - r5dn.large
+      - r5dn.xlarge
+      - r5n.12xlarge
+      - r5n.16xlarge
+      - r5n.24xlarge
+      - r5n.2xlarge
+      - r5n.4xlarge
+      - r5n.8xlarge
+      - r5n.large
+      - r5n.xlarge
+      - r6g.12xlarge
+      - r6g.16xlarge
+      - r6g.2xlarge
+      - r6g.4xlarge
+      - r6g.8xlarge
+      - r6g.large
+      - r6g.medium
+      - r6g.metal
+      - r6g.xlarge
+      - t1.micro
+      - t2.2xlarge
+      - t2.large
+      - t2.medium
+      - t2.micro
+      - t2.nano
+      - t2.small
+      - t2.xlarge
+      - t3.2xlarge
+      - t3.large
+      - t3.medium
+      - t3.micro
+      - t3.nano
+      - t3.small
+      - t3.xlarge
+      - t3a.2xlarge
+      - t3a.large
+      - t3a.medium
+      - t3a.micro
+      - t3a.nano
+      - t3a.small
+      - t3a.xlarge
+      - u-12tb1.metal
+      - u-18tb1.metal
+      - u-24tb1.metal
+      - u-6tb1.metal
+      - u-9tb1.metal
+      - x1.16xlarge
+      - x1.32xlarge
+      - x1e.16xlarge
+      - x1e.2xlarge
+      - x1e.32xlarge
+      - x1e.4xlarge
+      - x1e.8xlarge
+      - x1e.xlarge
+      - z1d.12xlarge
+      - z1d.2xlarge
+      - z1d.3xlarge
+      - z1d.6xlarge
+      - z1d.large
+      - z1d.metal
+      - z1d.xlarge
+    Default: t2.micro
+
+
+  StandaloneInstanceSecurityGroup:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Default: 'StandAlone-SecurityGroup'
+    Description: Select the Security group for the Standalone Instance.
+
+  StandAloneInstanceAvalilabilityZone:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: ap-south-1a
+    Description: Select an AvailabilityZone where the standalone instance is to be launched
+
+  SubnetIdForStandaloneInstance:
+    Type: AWS::EC2::Subnet::Id
+    Description: Select the Subnet ID for the Standalone Instance
+
+  DeleteVolumeOnTermination:
+    Type: String
+    Description: Want to Delete the Volume after Termination of Instance?
+    AllowedValues:
+      - 'true'
+      - 'false'
+
+  VolumeSizeFortheDevice:
+    Type: String
+    Description: Select the Volume Size that is required fo the Device.
+    Default: '20'
+
+Resources:
+
+  StandAloneEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: !Ref StandAloneInstanceAvalilabilityZone
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sda1"
+          Ebs:
+            DeleteOnTermination: !Ref DeleteVolumeOnTermination
+            VolumeSize: !Ref VolumeSizeFortheDevice
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SubnetId: !Ref SubnetIdForStandaloneInstance
+      SecurityGroupIds:
+        !Ref 'StandaloneInstanceSecurityGroup'
+      IamInstanceProfile:
+        !Ref 'Ec2InstanceProfile'
+      Tags:
+        - Key: Name
+          Value: !Ref StandaloneName
+        - Key: Environment
+          Value: !Ref TagValue
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          export MACHINE_TYPE="${MachineType}"
+          if [ $MACHINE_TYPE == "ubuntu" ]
+          then
+            sudo apt update
+            sudo apt install wget -y
+            sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
+            sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
+            sudo wget https://config-files-monitoring.s3.ap-south-1.amazonaws.com/ec2config.json
+            sudo cp ec2config.json /opt/aws/amazon-cloudwatch-agent/bin/
+            sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/ec2config.json -s 
+            sudo apt update
+            sudo apt install ruby-full -y
+            sudo wget https://aws-codedeploy-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/latest/install
+            sudo chmod +x ./install
+            sudo ./install auto > /tmp/logfile
+            sudo service codedeploy-agent start
+          else
+            sudo yum update
+            sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+            sudo yum install ruby -y
+            sudo yum install wget -y
+            sudo wget https://aws-codedeploy-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/latest/install
+            sudo chmod +x ./install
+            sudo ./install auto
+            sudo service codedeploy-agent start
+            sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+            sudo rpm -U ./amazon-cloudwatch-agent.rpm
+            sudo wget https://config-files-monitoring.s3.ap-south-1.amazonaws.com/ec2config.json
+            sudo cp ec2config.json /opt/aws/amazon-cloudwatch-agent/bin/
+            sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/ec2config.json -s  
+          fi
+
+
+  Ec2InstanceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Path: /
+      RoleName: "ec2-role"
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: "sts:AssumeRole"
+            Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+
+      ManagedPolicyArns:
+         - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+         - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+  Ec2InstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+       Path: "/"
+       Roles:
+         - Ref: "Ec2InstanceRole"
+  
